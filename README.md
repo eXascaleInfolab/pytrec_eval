@@ -6,7 +6,8 @@ Implements Kendall's tau similarity of rankings, t-test between runs etc…
 In particular, (for the moment) the implemented metrics are: Average Precision (AP), Normalized Discounted Cumulative Gain (NDCG), Precision, Recall, Precision@k.
 All the functions implementing metrics are contained in the module pytrec_eval.metrics.
 
-Basic usage:
+Loading Data
+------------
 
 * use the class TrecRun to load a TREC-run from a file
 
