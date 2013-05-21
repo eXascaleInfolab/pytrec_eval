@@ -8,12 +8,9 @@ DUMMY_DOCID = 'NO-DOCID'
 
 def ttest(victim_run, allTheOther_runs, qrels, metric):
     """
-    Computes ttest between victim and all other runs.
-    @param victim_run:
-    @param allTheOther_runs: a list of TRuns
-    @param qrels: the trel
-    @param metric: the metric to evaluate
-    @return: a dictionary d[otherRunName] = p-value
+    Computes ttest between victim_run and all runs contained in allTheOther_runs
+    using relevance judgements contained in qrels to compute the specified metric.
+    Returns a dictionary d[otherRunName] = p-value
     """
     victimAvg, victimDetails = evaluation.evaluate(victim_run, qrels, metric, True)
     # to read the scores always in the same order
@@ -29,7 +26,7 @@ def ttest(victim_run, allTheOther_runs, qrels, metric):
 
 
 class TrecRun:
-    """Represents a run of a typing system"""
+    """Represents a TREC-like run."""
 
     #Collects the entries of the run:
     #runEntries[topicID] = [ (docID, score, annotation) ] sorted by score
@@ -47,7 +44,8 @@ class TrecRun:
         elif type(source) == dict:
             self.entries = source
             self.name = name
-        else: raise RuntimeError("Wrong parameter for TrecRun's constructor. Accepted str and source, given", type(source))
+        else:
+            raise RuntimeError("Wrong parameter for TrecRun's constructor. Accepted str and dict, given", type(source))
 
         for topicId, entryList in self.entries.items():
             entryList.sort(key = lambda x: x[1], reverse = True)
@@ -76,17 +74,13 @@ class TrecRun:
         return [] if topicId not in self.entries else self.entries[topicId]
 
     def getScore(self, topicId, docId):
+        """Get the score of a specified pair topicId, docId"""
         scores = [score for did, score in self.entries[topicId] if did == docId]
         if scores == []: raise KeyError('Invalid docId for topic "' + topicId + '"')
         return scores[0]
 
-    def getRelevanceInformation(self, trels, docId, entityURI):
-        """Returns the relevance scores of trels associated to the entity (docId, entityURI)"""
-        #TODO: implement
-        #return trels.getRelevanceScoresDict(docId, entityURI, self.getTypesUris(docId, entityURI))
-        pass
-
     def getTopicIds(self):
+        """Returns all topicIDs"""
         return self.entries.keys()
 
     def removeEntries(self, topicId):
@@ -94,7 +88,7 @@ class TrecRun:
         self.entries.pop(topicId, '')
 
     def write(self, outStream = sys.stdout):
-        """writes the run in the specified stream"""
+        """Writes the run in the specified stream using TREC-format"""
         for topicId, entryList in self.entries.items():
             for (rank, (docId, score, annotation)) in enumerate(entryList, start=1):
                 outStream.write('{}\tQ0\t{}\t{}\t{}\t{}\n'.format(topicId, docId, rank, score, annotation) )
@@ -104,6 +98,7 @@ class TrecRun:
 
     def __repr__(self):
         return 'TrecRun ' + self.name
+
 
 class QRels:
     """ Contains relevance judgements in TREC format.
@@ -121,8 +116,8 @@ class QRels:
 
     def __init__(self, judgements):
         """Initialises the QRels starting from a dictionary
-        judgements[topicID][docID] = relevanceScore
-        or from an existing trels file."""
+        judgements[topicID][docID] = relevanceScore, if judgements is such a dictionary;
+        or from an existing qrels file, if judgements is a string containing the file-name."""
         self.allJudgements = {}
         if type(judgements) == str:
             self.allJudgements = {}
@@ -133,41 +128,38 @@ class QRels:
             raise RuntimeError("QRels.__init__ accepts exactly one argument (either string or dictionary).")
 
     def getNRelevant(self, topicId):
+        """Returns the number of relevant documents for the specified topicID"""
         if topicId not in self.allJudgements: return 0
         return len( [t for t, relevance in self.allJudgements[topicId].items() if relevance >= 1 ] )
 
     def isRelevant(self, topicId, docId):
-        """returns True if typeURI is relevant for entityURI in the context proposed in docID.
-        If a triple (docId, entityURI, typeURI) is not present in the trels it returns False."""
+        """Returns True if typeURI is relevant for entityURI in the context proposed in docID.
+        If a triple (docId, entityURI, typeURI) is not present in the qrels it returns False."""
         try:
             return self.allJudgements[topicId][docId] >= 1
         except KeyError:
             return False
 
     def getAllRelevants(self, topicId):
-        """
-        Returns all relevants docIds for the specified topic
-        @param topicId:
-        @return: a set of relevant docIDs
-        """
+        """ Returns a set containing all relevants docIds for the specified topic"""
         return { docId for docId, score in self.allJudgements[topicId].items()
                  if score >= 1 }
 
     def getRelevanceScore(self, topicId, docId):
-        """returns the relevance score of docId for topicId.
-        If a tuple (topicId, docId) is not contained in the trels it returns None."""
+        """Returns the relevance score of docId for topicId.
+        If a tuple (topicId, docId) is not contained in the qrels returns None."""
         try:
             return self.allJudgements[topicId][docId]
         except KeyError:
             return None
 
-    def getRelevanceScores(self, topicId, docIds):
-        """like getRelevanceScore but now typeURIs is a list of URIs.
+    def getRelevanceScores(self, topicId, docIds, nonJudged=0):
+        """Like getRelevanceScore but now typeURIs is a list of URIs.
         The method returns a LIST of relevance scores referring to each element of typeURIs.
-        If there is no relevance judgement for a certain couple (topicId, docIds) a 0 is added
+        If there is no relevance judgement for a certain couple (topicId, docIds) a nonJudged is added
         to the list."""
         try:
-            return [ 0 if not ( topicId in self.allJudgements and docId in self.allJudgements[topicId])
+            return [ nonJudged if not ( topicId in self.allJudgements and docId in self.allJudgements[topicId])
                      else self.allJudgements[topicId][docId]
                      for docId in docIds ]
         except KeyError:
@@ -177,10 +169,11 @@ class QRels:
         return self.allJudgements.keys()
 
     def getNTopics(self):
-        """returns the number of topics"""
+        """Returns the number of topics"""
         return len(self.allJudgements)
 
     def write(self, streamOut):
+        """Writes the qrels into a stream using TREC-format for qrels"""
         for topicId, dictDocs in self.allJudgements.items():
             for docId, relevanceScore in dictDocs.items():
                 streamOut.write( '{}\t0\t{}\t{}\n'.format(topicId, docId, relevanceScore) )

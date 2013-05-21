@@ -4,4 +4,3 @@ from pytrec_eval.evaluation_core import *
 from pytrec_eval.metrics import *
 from pytrec_eval.utils import *
 from pytrec_eval.ranking import *
-#from evaluation.conversions import runFromFullArticleCollection

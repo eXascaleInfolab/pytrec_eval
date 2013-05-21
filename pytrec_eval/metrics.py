@@ -2,9 +2,11 @@ import math
 
 __author__ = 'alberto'
 
-#"""Contains all metrics.
-#A metric is a function f(TRun, TRels) that returns a double.
-#We suppose that each entity has a judgement."""
+# Contains all metrics.
+# A metric is a function f(TrecRun, QRels, detailed=False) that returns a double.
+# If detailed is True only the aggregated score among all topics is returned (a double);
+# otherwise, a pair (aggregatedScore, details) where
+# details is a dictionary details[topicID] = score is returned.
 
 def precision(run, qrels, detailed = False):
     """Computes average precision among all entities."""
@@ -20,7 +22,7 @@ def precision(run, qrels, detailed = False):
     return avg / numTopics if not detailed else (avg / numTopics, details)
 
 def recall(run, qrels, detailed = False):
-    """Computes average recall among all entities"""
+    """Computes recall"""
     details = {}
     avg = 0
     for topicId, entryList in run.entries.items():
@@ -33,7 +35,7 @@ def recall(run, qrels, detailed = False):
     return avg / numtopics if not detailed else (avg / numtopics, details)
 
 def avgPrec(run, qrels, detailed = False):
-    """Computes average recall among all entities"""
+    """Computes average precision."""
     details = {}
     avg = 0
     for topicId, entryList in run.entries.items():
@@ -51,6 +53,11 @@ def avgPrec(run, qrels, detailed = False):
     return avg / numtopics if not detailed else (avg / numtopics, details)
 
 def precisionAt(rank):
+    """
+    Computes precision@rank. Returns a function that,
+    satisfies the requirements defined on the top of this module and that
+    computes precision@rank.
+    """
     def precisionAtRank(run, qrels, detailed = False):
         details = {}
         avg = 0
@@ -64,6 +71,13 @@ def precisionAt(rank):
     return precisionAtRank
 
 def ndcg(run, qrels, detailed = False):
+    """
+    Computes NDCG using the formula
+    DCG_p = rel_1 + \sum_{i = 2}^p( rel_i / log_2(i) )
+    Where p is the number of entries of the given run for
+    a certain topic, and rel_i is the relevance score of the
+    document at rank i.
+    """
     details = {}
     avg = 0
     for topicId, entryList in run.entries.items():
