@@ -9,7 +9,7 @@ All the functions implementing metrics are contained in the module pytrec_eval.m
 Loading Data
 ------------
 
-* use the class TrecRun to load a TREC-run from a file
+* Use the class TrecRun to load a TREC-run from a file
 
 `run = pytrec_eval.TrecRun(<fileName>)`
 
@@ -31,7 +31,7 @@ Evaluation
 
 `pytrec_eval.evaluate(run, qrels, metrics)`
 
-where metrics can be either a list of functions computing some metrics, for example, 
+where `metrics` can be either a list of functions computing some metrics, for example, 
 `[pytrec_eval.avgPrec, pytrec_eval.ndcg]`
 or a dictionary mapping metrics names to the function that computes the metrics, for example,
 `{ 'MAP' : pytrec_eval.avgPrec, 'NDCG' : pytrec_eval.ndcg }`.
@@ -41,8 +41,8 @@ or a dictionary mapping metrics names to the function that computes the metrics,
 
 `ranking = pytrec_eval(<list of TrecRuns>, qrels, measure)`
 
-where measure is a function that computes some metrics (have a look to pytrec_eval.metrics to get the list of the implemented measures). 
-A ranking is a list of pairs (TrecRun, score) ordered by decreasing score.
+where `measure` is a function that computes some metrics. 
+A ranking is a list of pairs `(TrecRun, score)` ordered by decreasing score.
 
 
 Statistical Tools
@@ -52,14 +52,14 @@ Statistical Tools
 
 `pValues = pytrec_eval.ttest(run0, [run1, run2], qrels, pytrec_eval.ndcg)`
 
-returns a dictionary mapping the name of run1 to the p-value obtained by comparing the NDCG score of run1 to the NDCG score of run0, and the name of run2 to the p-value obtained by comparing the NDCG score of run2 to the NDCG score of run0. 
+returns a dictionary mapping the name of `run1` to the p-value obtained by comparing the NDCG score of `run1` to the NDCG score of `run0`, and the name of `run2` to the p-value obtained by comparing the NDCG score of `run2` to the NDCG score of `run0`. 
 
 
 * Given two rankings it is possible to compute the *Kendall's tau correlation* between them as follows:
 
 `tau = pytrec_eval.rankSimilarity(ranking0, ranking1)`
 
-where ranking0 and ranking1 are lists of pairs (TrecRun, score) ordered by decreasing score.
+where `ranking0` and `ranking1` are lists of pairs `(TrecRun, score)` ordered by decreasing score.
 
 
 For more functions/details, please check the documentation strings in the Python source code. 
