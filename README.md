@@ -63,3 +63,11 @@ where `ranking0` and `ranking1` are lists of pairs `(TrecRun, score)` ordered by
 
 
 For more functions/details, please check the documentation strings in the Python source code. 
+
+
+Requirements
+------------
+
+* Python 3.3
+* scipy (http://www.scipy.org/)
+
