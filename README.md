@@ -37,7 +37,7 @@ or a dictionary mapping metrics names to the function that computes the metrics,
 `{ 'MAP' : pytrec_eval.avgPrec, 'NDCG' : pytrec_eval.ndcg }`.
 
 
-* It is possible to compute the *ranking* of a list of runs by using pytrec_eval.rankRuns as follows:
+* It is possible to compute the **ranking** of a list of runs by using pytrec_eval.rankRuns as follows:
 
 `ranking = pytrec_eval(<list of TrecRuns>, qrels, measure)`
 
@@ -48,14 +48,14 @@ A ranking is a list of pairs `(TrecRun, score)` ordered by decreasing score.
 Statistical Tools
 -----------------
 
-* pytrec_eval features a function that computes the *Student's t-test* between a run and a list of other runs, for example, 
+* pytrec_eval features a function that computes the **Student's t-test** between a run and a list of other runs, for example, 
 
 `pValues = pytrec_eval.ttest(run0, [run1, run2], qrels, pytrec_eval.ndcg)`
 
 returns a dictionary mapping the name of `run1` to the p-value obtained by comparing the NDCG score of `run1` to the NDCG score of `run0`, and the name of `run2` to the p-value obtained by comparing the NDCG score of `run2` to the NDCG score of `run0`. 
 
 
-* Given two rankings it is possible to compute the *Kendall's tau correlation* between them as follows:
+* Given two rankings it is possible to compute the **Kendall's tau correlation** between them as follows:
 
 `tau = pytrec_eval.rankSimilarity(ranking0, ranking1)`
 
