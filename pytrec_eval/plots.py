@@ -20,12 +20,14 @@ def plotEvaluation(trecRun, qrels, measure, outputFile=None, showPlot=True):
     avg, details = pytrec_eval.evaluate(trecRun, qrels, measure, True)
     # to be sure that qId order is the same of score order (maybe it's not necessary...)
     lstDetails = [ (qId, score) for qId, score in details.items() ]
+    lstDetails.sort(key=lambda x: x[0])
     qIds = [ qId for qId, _ in lstDetails ]
     scores= [ score - avg for _, score in lstDetails ]
     plt.figure(1)
-    x = np.arange(len(qIds))
-    plt.bar(x, scores)
-    plt.xticks( x + 0.35, qIds, rotation=90, size=8)
+    x = [ i for i in range(len(qIds))] #np.arange(len(qIds))
+    plt.bar(x, scores, width=0.6)
+    plt.xticks( x, qIds, rotation=90, size=5)
+    plt.xlim(xmax=len(qIds))
     plt.xlabel('Topic Id')
     plt.ylabel('Difference of ' + pytrec_eval.METRICS_NAMES[measure] + ' from Average')
     if showPlot: plt.show()
