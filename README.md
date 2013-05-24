@@ -31,10 +31,8 @@ Evaluation
 
 `pytrec_eval.evaluate(run, qrels, metrics)`
 
-where `metrics` can be either a list of functions computing some metrics, for example, 
-`[pytrec_eval.avgPrec, pytrec_eval.ndcg]`
-or a dictionary mapping metrics names to the function that computes the metrics, for example,
-`{ 'MAP' : pytrec_eval.avgPrec, 'NDCG' : pytrec_eval.ndcg }`.
+where `metrics` is a list of functions computing some metrics, for example, 
+`[pytrec_eval.avgPrec, pytrec_eval.ndcg]`.
 
 
 * It is possible to compute the **ranking** of a list of runs by using pytrec_eval.rankRuns as follows:
@@ -43,6 +41,25 @@ or a dictionary mapping metrics names to the function that computes the metrics,
 
 where `measure` is a function that computes some metrics. 
 A ranking is a list of pairs `(TrecRun, score)` ordered by decreasing score.
+
+
+pytrec_eval can also creates plots:
+
+* The function `plotEvaluation` plots an histogram highlighting the performance of a run for each topic. It is possible to save the plot into a file by using the optional parameter `outputFile`.
+
+`pytrec_eval.plotEvaluation(trecRun, qrels, pytrec_eval.ndcg, outputFile='./ndcg.pdf', showPlot=True)`
+
+
+* The function `plotRecallPrecision` plots the recall/precision curve of a given run.
+It is also possible to have multiple recall/precision curves, one for each topic, by setting `perQuery = True`.
+
+`pytrec_eval.plotRecallPrecision(trecRun, qrels, perQuery=True, outputFile='./recall-precision.pdf', showPlot=False)`
+
+
+* The function `plotRecallPrecisionAll` plots the recall/precision curves of all runs contained in the input list of runs. 
+
+`pytrec_eval.plotRecallPrecisionAll([run0, run1, run2], qrels, outputFile='./recall-precision-all.pdf', showPlot=False)`
+
 
 
 Statistical Tools
