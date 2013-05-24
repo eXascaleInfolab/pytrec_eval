@@ -87,4 +87,6 @@ Requirements
 
 * Python 3.3
 * scipy (http://www.scipy.org/)
+* numpy (http://www.numpy.org/)
+* matplotlib (http://matplotlib.org/)
 
