@@ -8,6 +8,7 @@ __author__ = 'alberto'
 # otherwise, a pair (aggregatedScore, details) where
 # details is a dictionary details[topicID] = score is returned.
 
+
 def precision(run, qrels, detailed = False):
     """Computes average precision among all entities."""
     details = {}
@@ -97,4 +98,12 @@ def ndcg(run, qrels, detailed = False):
     numtopics = qrels.getNTopics()
     return avg / numtopics if not detailed else (avg / numtopics, details)
 
-STD_METRICS = { 'MAP' : avgPrec, 'NDCG' : ndcg }
+STD_METRICS = [avgPrec, ndcg]
+
+METRICS_NAMES = {
+    precision : 'Precision',
+    ndcg : 'NDCG',
+    precisionAt : 'Precision@k',
+    recall: 'recall',
+    avgPrec: 'Average Precision'
+}
