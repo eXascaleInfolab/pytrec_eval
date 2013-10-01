@@ -19,6 +19,8 @@ def rankSimilarity(rank0, rank1):
     ordered by score descending, such that, for example, rank0[0] is the system
     with the best score in rank0.
     """
-    rank0names = [run.name for (run, _) in rank0]
-    rank1names = [run.name for (run, _) in rank1]
-    return stats.kendalltau(rank0names, rank1names)
+    rank0Dict = { run.name: position for position, (run, _) in enumerate(rank0) }
+    rank0Ids = list(range(0, len(rank0)))
+    rank1Ids = [ rank0Dict[run.name] for (run, _) in rank1 ]
+    return stats.kendalltau(rank0Ids, rank1Ids)
+
