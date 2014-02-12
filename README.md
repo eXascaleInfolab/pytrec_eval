@@ -45,9 +45,9 @@ A ranking is a list of pairs `(TrecRun, score)` ordered by decreasing score.
 
 pytrec_eval can also creates plots:
 
-* The function `plotEvaluation` plots an histogram highlighting the performance of a run for each topic. It is possible to save the plot into a file by using the optional parameter `outputFile`.
+* The function `plotDifferenceFromAvg` plots an histogram highlighting the performance of a run for each topic. It is possible to save the plot into a file by using the optional parameter `outputFile`.
 
-`pytrec_eval.plotEvaluation(trecRun, qrels, pytrec_eval.ndcg, outputFile='./ndcg.pdf', showPlot=True)`
+`pytrec_eval.plotDifferenceFromAvg(trecRun, qrels, pytrec_eval.ndcg, outputFile='./ndcg.pdf', showPlot=True)`
 
 
 * The function `plotRecallPrecision` plots the recall/precision curve of a given run.
