@@ -99,10 +99,10 @@ def ndcg(run, qrels, detailed=False):
         #sumIdcg = sum( [ (2**relScore - 1) / math.log2(rank+1)
         #                   for rank, relScore in enumerate(relevancesByRank, start=1)] )
         if sumIdcg == 0:
-            details[topicId] = sumdcg / sumIdcg
+            details[topicId] = 0
         else:
             details[topicId] = sumdcg / sumIdcg
-        avg += sumdcg / sumIdcg
+            avg += sumdcg / sumIdcg
     numtopics = qrels.getNTopics()
     return avg / numtopics if not detailed else (avg / numtopics, details)
 
