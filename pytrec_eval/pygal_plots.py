@@ -67,7 +67,7 @@ def plotEvaluation(trecRun, qrels, measure, outputFile, style=PLOT_STYLE):
     bar_chart.x_label_rotation = 90
     bar_chart.x_labels = qIds
     bar_chart.x_title = 'query ids'
-    bar_chart.y_title = 'Difference of ' + pytrec_eval.METRICS_NAMES[measure] + ' from Average'
+    bar_chart.y_title = pytrec_eval.METRICS_NAMES[measure]
     bar_chart.render_to_file(outputFile)
 
 
