@@ -108,11 +108,3 @@ def ndcg(run, qrels, detailed=False):
 
 
 STD_METRICS = [avgPrec, ndcg]
-
-METRICS_NAMES = {
-    precision: 'Precision',
-    ndcg: 'NDCG',
-    precisionAt: 'Precision@k',
-    recall: 'recall',
-    avgPrec: 'Average Precision'
-}

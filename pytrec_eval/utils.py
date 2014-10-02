@@ -21,7 +21,7 @@ def evaluate(run, qrels, measures=pytrec_eval.STD_METRICS, detailed=False):
 def evaluateAll(runs, qrels, measures=pytrec_eval.STD_METRICS, streamOut=sys.stdout):
     """Evaluates all the runs contained in runs (a list of runs).
     Prints the result of the evaluation in streamOut."""
-    mList = [pytrec_eval.METRICS_NAMES[measure] for measure in measures]
+    mList = [measure.__name__ for measure in measures]
 
     print('run name', end='\t', file=streamOut)
     for m in mList: print(m, end='\t', file=streamOut)
