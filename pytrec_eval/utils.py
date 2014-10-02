@@ -1,4 +1,5 @@
 import sys
+from scipy.stats import stats
 import pytrec_eval
 
 __author__ = 'alberto'
@@ -55,3 +56,23 @@ def showRelevanceScores(trecRun, qrels, topicId, top_n=10, file=sys.stdout):
         print(topicId, rank, docId,
               qrels.getRelevanceScore(topicId, docId) if docId in qrels.allJudgements[topicId] else '?',
               sep='\t', file=file)
+
+
+def ttest(victim_run, allTheOther_runs, qrels, metric):
+    """
+    Computes ttest between victim_run and all runs contained in allTheOther_runs
+    using relevance judgements contained in qrels to compute the specified metric.
+    Returns a dictionary d[otherRunName] = p-value.
+    The ttest used is a two-tail student ttest on 2 related samples.
+    """
+    victimAvg, victimDetails = evaluate(victim_run, qrels, metric, True)
+    # to read the scores always in the same order
+    keyList = list(victimDetails.keys())
+    victimScores = [ victimDetails[k] for k in keyList ]
+    result = {}
+    for othertrun in allTheOther_runs:
+        otherAvg, otherDetails = evaluate(othertrun, qrels, metric, True)
+        otherScores = [otherDetails[k] for k in keyList]
+        _, p = stats.ttest_rel(victimScores, otherScores)
+        result[othertrun.name] = p
+    return result

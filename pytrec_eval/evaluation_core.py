@@ -7,26 +7,6 @@ __author__ = 'alberto'
 DUMMY_DOCID = 'NO-DOCID'
 
 
-def ttest(victim_run, allTheOther_runs, qrels, metric):
-    """
-    Computes ttest between victim_run and all runs contained in allTheOther_runs
-    using relevance judgements contained in qrels to compute the specified metric.
-    Returns a dictionary d[otherRunName] = p-value.
-    The ttest used is a double tail student ttest on 2 related samples.
-    """
-    victimAvg, victimDetails = evaluation.evaluate(victim_run, qrels, metric, True)
-    # to read the scores always in the same order
-    keyList = list(victimDetails.keys())
-    victimScores = [ victimDetails[k] for k in keyList ]
-    result = {}
-    for othertrun in allTheOther_runs:
-        otherAvg, otherDetails = evaluation.evaluate(othertrun, qrels, metric, True)
-        otherScores = [otherDetails[k] for k in keyList]
-        _, p = stats.ttest_rel(victimScores, otherScores)
-        result[othertrun.name] = p
-    return result
-
-
 class TrecRun:
     """Represents a TREC-like run."""
 
