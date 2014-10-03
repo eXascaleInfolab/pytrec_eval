@@ -42,7 +42,7 @@ def avgPrec(run, qrels, detailed=False):
     details = {}
     avg = 0
     for topicId, entryList in run.entries.items():
-        sumPrec = numRel = rank = 0
+        sumPrec = numRel = 0
         for (rank, (docId, score, _)) in enumerate(entryList, start=1):
             if qrels.isRelevant(topicId, docId):
                 numRel += 1
