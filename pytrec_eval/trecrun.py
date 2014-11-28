@@ -34,7 +34,7 @@ class TrecRun:
         for line in f:
             line = line.strip()
             if line == "": continue
-            splitLine = line.split('\t')
+            splitLine = line.split()
             if len(splitLine) == 6:
                 topicId, Q0, docId, rank, score, annotation = splitLine
             elif len(splitLine) == 5:

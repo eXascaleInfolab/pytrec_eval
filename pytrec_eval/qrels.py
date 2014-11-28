@@ -85,7 +85,7 @@ class QRels:
         for line in fQRels:
             line = line.strip()
             if line == '': continue
-            split = line.split('\t')
+            split = line.split()
             topicId, docId, relevanceScore = split[0], split[2], float(split[3])
 
             if topicId not in self.allJudgements:
