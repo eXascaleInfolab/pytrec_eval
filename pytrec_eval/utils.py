@@ -77,3 +77,20 @@ def ttest(victim_run, allTheOther_runs, qrels, metric):
         _, p = stats.ttest_rel(victimScores, otherScores)
         result[othertrun.name] = p
     return result
+
+
+def confusion_matrix_toString(cf):
+    """
+    Generates a string representing a confusion matrix.
+    :param cf: a confusion matrix cf[predicted][real] = count
+    where predicted and real are strings.
+    :type cf: dict
+    :return:
+    :rtype: str
+    """
+    classes = sorted(cf.keys())
+    s = '\t' + '\t'.join(classes) + '\n'
+    for predicted_class in classes:
+        s += predicted_class + '^\t'
+        s += '\t'.join(str(cf[predicted_class][real_class]) for real_class in classes) + '\n'
+    return s

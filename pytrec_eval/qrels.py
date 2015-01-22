@@ -28,6 +28,9 @@ class QRels:
         else:
             raise RuntimeError("QRels.__init__ accepts exactly one argument (either string or dictionary).")
 
+    def getDocIds(self):
+        return sorted([docId for _, docsRelevance in self.allJudgements.items() for docId in docsRelevance])
+
     def getNRelevant(self, topicId):
         """Returns the number of relevant documents for the specified topicID"""
         if topicId not in self.allJudgements: return 0
