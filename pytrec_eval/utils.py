@@ -12,9 +12,9 @@ def evaluate(run, qrels, measures=pytrec_eval.STD_METRICS, detailed=False):
     if type(measures) == list:
         results = []
         for measure in measures:
-            results.append(measure(run, qrels, detailed))
+            results.append(measure(run, qrels, detailed=detailed))
     else:
-        results = measures(run, qrels, detailed)
+        results = measures(run, qrels, detailed=detailed)
     return results
 
 
