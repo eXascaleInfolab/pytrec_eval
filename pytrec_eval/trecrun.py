@@ -18,7 +18,7 @@ class TrecRun:
         may be not sorted)."""
         if type(source) == str:
             self._parseFile(source)
-            self.name = name if name != '' else source[source.rfind('/') + 1:]
+            self.name = name if name != '' else self._extract_runname(source)
         elif type(source) == dict:
             self.entries = source
             self.name = name
@@ -27,6 +27,13 @@ class TrecRun:
 
         for topicId, entryList in self.entries.items():
             entryList.sort(key=lambda x: x[1], reverse=True)
+
+    def _extract_runname(self, filename):
+        if filename.endswith('.trecrun'):
+            return filename[filename.rfind('/') + 1: filename.rfind('.')]
+        else:
+            return filename
+
 
     def _parseFile(self, source):
         self.entries = {}
