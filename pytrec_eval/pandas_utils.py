@@ -4,7 +4,7 @@ import pandas as pd
 from pytrec_eval.utils import *
 
 
-def df_evaluate(run, qrels, measures):
+def df_evaluate(run, qrels, measures, details=False):
     """
     Evaluates a the given run with the given qrels by computing the
     measures given as input.
@@ -17,12 +17,21 @@ def df_evaluate(run, qrels, measures):
     of the metrics for the topic.
     :return:
     """
-    if type(measures) == list:
-        details = evaluate(run, qrels, measures, True)
-        return pd.DataFrame({m.__name__: pd.Series(details[i][1]) for i, m in enumerate(measures)})
+    if not details:
+        if type(measures) == list:
+            details = evaluate(run, qrels, measures)
+            d = {m.__name__: pd.Series(details[i]) for i, m in enumerate(measures)}
+            return pd.DataFrame(d)
+        else:
+            avg = evaluate(run, qrels, measures)
+            return pd.DataFrame({measures.__name__: [avg]})
     else:
-        _, details = evaluate(run, qrels, measures, True)
-        return pd.DataFrame({run.name: pd.Series(details)})
+        if type(measures) == list:
+            details = evaluate(run, qrels, measures, True)
+            return pd.DataFrame({m.__name__: pd.Series(details[i][1]) for i, m in enumerate(measures)})
+        else:
+            _, details = evaluate(run, qrels, measures, True)
+            return pd.DataFrame({run.name: pd.Series(details)})
 
 
 def df_evaluateAll(runs, qrels, measures):
