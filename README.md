@@ -7,8 +7,7 @@ Moreover, it is capable to output metrics for evaluating classification and clus
 For the moment the implemented metrics are the following (partitioned by task):
 - *Document Retrival*: Average Precision (AP), Normalized Discounted Cumulative Gain (NDCG), Precision, Recall, Precision@k.
 - *Classification*: precision, recall, precision (multi-topic), recall (multi-topic), accuracy (multi-topic), exact match ratio, retrieval f-score.
-- *Clustering*: purity, nmi, randin index, f-score.
-All the functions implementing metrics are contained in the module pytrec_eval.metrics.
+- *Clustering*: purity, nmi, randin index, f-score.  
 
 Loading Data
 ------------
