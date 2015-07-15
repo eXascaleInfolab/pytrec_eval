@@ -7,7 +7,7 @@ class TrecRun:
     """Represents a TREC-like run."""
 
     # Collects the entries of the run:
-    #runEntries[topicID] = [ (docID, score, annotation) ] sorted by score
+    # runEntries[topicID] = [ (docID, score, annotation) ] sorted by score
     entries = None
 
     name = None
@@ -34,7 +34,6 @@ class TrecRun:
         else:
             return filename
 
-
     def _parseFile(self, source):
         self.entries = {}
         f = open(source, 'r', encoding='utf-8')
@@ -53,6 +52,18 @@ class TrecRun:
             if topicId not in self.entries: self.entries[topicId] = []
             self.entries[topicId].append((docId, score, annotation))
         f.close()
+
+    def restrictTopicsTo(self, qrels):
+        """
+        Remove all topics that are not in qrels
+        :param qrels:
+        :type qrels: pytrec_eval.QRels
+        :return:
+        """
+        good_topics = set(qrels.getTopicIds())
+        bad_topics = [run_topic for run_topic in self.getTopicIds() if run_topic not in good_topics]
+        for t in bad_topics:
+            self.removeEntries(t)
 
     def getEntriesBy(self, topicId):
         """Returns all entry for the specified topicID"""
