@@ -2,9 +2,12 @@ pytrec_eval
 ===========
 
 A (tiny) library to evaluate TREC-like runs by using TREC-like qrels. 
-Implements Kendall's tau similarity of rankings, t-test between runs etc…
-In particular, (for the moment) the implemented metrics are: Average Precision (AP), Normalized Discounted Cumulative Gain (NDCG), Precision, Recall, Precision@k.
-All the functions implementing metrics are contained in the module pytrec_eval.metrics.
+Implements Kendall's tau similarity of rankings, t-test between runs etcetera.
+Moreover, it is capable to output metrics for evaluating classification and clustering algorithms.
+For the moment the implemented metrics are the following (partitioned by task):
+- *Document Retrival*: Average Precision (AP), Normalized Discounted Cumulative Gain (NDCG), Precision, Recall, Precision@k.
+- *Classification*: precision, recall, precision (multi-topic), recall (multi-topic), accuracy (multi-topic), exact match ratio, retrieval f-score.
+- *Clustering*: purity, nmi, randin index, f-score.  
 
 Loading Data
 ------------
