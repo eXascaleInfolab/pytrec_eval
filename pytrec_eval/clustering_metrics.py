@@ -123,6 +123,7 @@ def f_clustering(beta):
         :param detailed: no details available
         :return:
         """
+        __name__ = 'f_' + str(beta)
         items = run.getTopicIds()
         tp, tn, fp, fn = 0, 0, 0, 0
         for i in items:

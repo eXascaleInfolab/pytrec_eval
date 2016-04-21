@@ -94,3 +94,19 @@ def confusion_matrix_toString(cf):
         s += predicted_class + '^\t'
         s += '\t'.join(str(cf[predicted_class][real_class]) for real_class in classes) + '\n'
     return s
+
+
+def keep_qrels_topics(run, qrels):
+    """
+    Returns a new run composed by only the entries of the input run belonging
+    to topics contained in the input qrels.
+
+    Important: Entries of the new run are shallow copies of entries of the input run.
+    :param run:
+    :type run: TrecRun
+    :param qrels:
+    :type qrels: QRels
+    :return: TrecRun
+    """
+    new_run = {topic_id: entries for topic_id, entries in run.entries.items() if topic_id in qrels.allJudgements}
+    return pytrec_eval.TrecRun(new_run)

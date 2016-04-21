@@ -64,6 +64,7 @@ def precisionAt(rank):
     """
 
     def precisionAtRank(run, qrels, detailed=False):
+
         details = {}
         avg = 0
         for topicId, entryList in run.entries.items():
