@@ -109,4 +109,4 @@ def keep_qrels_topics(run, qrels):
     :return: TrecRun
     """
     new_run = {topic_id: entries for topic_id, entries in run.entries.items() if topic_id in qrels.allJudgements}
-    return pytrec_eval.TrecRun(new_run)
+    return pytrec_eval.TrecRun(new_run, run.name + '_only_qrels_topics')
