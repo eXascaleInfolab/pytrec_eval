@@ -34,7 +34,8 @@ def recall(run, qrels, detailed=False):
     details = {}
     avg = 0
     nTopicsWRelevant = 0
-    for topicId, entryList in qrels.allJudgements:
+    for topicId in qrels.allJudgements:
+        entryList = run.entries[topicId]
         numRelevant = qrels.getNRelevant(topicId)
         if topicId in run.entries:
             numRelevantFound = len([docId for docId, score, _ in entryList
