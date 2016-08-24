@@ -2,6 +2,7 @@ import math
 
 __author__ = 'alberto'
 
+
 # Contains all metrics.
 # A metric is a function f(TrecRun, QRels, detailed=False) that returns a double.
 # If detailed is True only the aggregated score among all topics is returned (a double);
@@ -13,12 +14,17 @@ def precision(run, qrels, detailed=False):
     """Computes average precision among all entities."""
     details = {}
     avg = 0
-    for topicId, entryList in run.entries.items():
-        numRelevant = len([docId for docId, score, _ in entryList
-                           if qrels.isRelevant(topicId, docId)])
-        numReturned = len(entryList)
-        details[topicId] = numRelevant / numReturned
-        avg += numRelevant / numReturned
+    for topicId in qrels.allJudgements:
+        if topicId in run.entries:
+            entryList = run.entries[topicId]
+            numRelevant = len([docId for docId, score, _ in entryList
+                               if qrels.isRelevant(topicId, docId)])
+            numReturned = len(entryList)
+            details[topicId] = numRelevant / numReturned
+            avg += numRelevant / numReturned
+        else:
+            details[topicId] = 0
+            avg += 0
     numTopics = qrels.getNTopics()
     return avg / numTopics if not detailed else (avg / numTopics, details)
 
@@ -27,14 +33,19 @@ def recall(run, qrels, detailed=False):
     """Computes recall"""
     details = {}
     avg = 0
+    nTopicsWRelevant = 0
     for topicId, entryList in run.entries.items():
         numRelevantFound = len([docId for docId, score, _ in entryList
                                 if qrels.isRelevant(topicId, docId)])
         numRelevant = qrels.getNRelevant(topicId)
-        details[topicId] = numRelevantFound / numRelevant
-        avg += numRelevantFound / numRelevant
-    numtopics = qrels.getNTopics()
-    return avg / numtopics if not detailed else (avg / numtopics, details)
+        if numRelevant > 0:
+            details[topicId] = numRelevantFound / numRelevant
+            avg += numRelevantFound / numRelevant
+            nTopicsWRelevant += 1
+            # ignore queries without relevant docs is 1
+
+    # numtopics = qrels.getNTopics()
+    return avg / nTopicsWRelevant if not detailed else (avg / nTopicsWRelevant, details)
 
 
 def avgPrec(run, qrels, detailed=False):
@@ -48,7 +59,7 @@ def avgPrec(run, qrels, detailed=False):
                 numRel += 1
                 sumPrec += numRel / rank
         totRelevant = qrels.getNRelevant(topicId)
-        #if totRelevant == 0: print(topicId)
+        # if totRelevant == 0: print(topicId)
         ap = sumPrec / totRelevant if totRelevant > 0 else 0
         avg += ap
         details[topicId] = ap
@@ -64,7 +75,6 @@ def precisionAt(rank):
     """
 
     def precisionAtRank(run, qrels, detailed=False):
-
         details = {}
         avg = 0
         for topicId, entryList in run.entries.items():
@@ -92,12 +102,12 @@ def ndcg(run, qrels, detailed=False):
         relevancesByRank = qrels.getRelevanceScores(topicId, [doc for (doc, _, _) in entryList])
         sumdcg = relevancesByRank[0] + sum([relScore / math.log2(rank)
                                             for rank, relScore in enumerate(relevancesByRank[1:], start=2)])
-        #sumdcg = sum( [ (2**relScore - 1) / math.log2(rank+1)
+        # sumdcg = sum( [ (2**relScore - 1) / math.log2(rank+1)
         #                for rank, relScore in enumerate(relevancesByRank, start=1)] )
         relevancesByRank.sort(reverse=True)  # sort the relevance list descending order
         sumIdcg = relevancesByRank[0] + sum([relScore / math.log2(rank)
                                              for rank, relScore in enumerate(relevancesByRank[1:], start=2)])
-        #sumIdcg = sum( [ (2**relScore - 1) / math.log2(rank+1)
+        # sumIdcg = sum( [ (2**relScore - 1) / math.log2(rank+1)
         #                   for rank, relScore in enumerate(relevancesByRank, start=1)] )
         if sumIdcg == 0:
             details[topicId] = 0
