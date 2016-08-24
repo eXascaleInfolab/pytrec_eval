@@ -34,16 +34,20 @@ def recall(run, qrels, detailed=False):
     details = {}
     avg = 0
     nTopicsWRelevant = 0
-    for topicId, entryList in run.entries.items():
-        numRelevantFound = len([docId for docId, score, _ in entryList
-                                if qrels.isRelevant(topicId, docId)])
+    for topicId, entryList in qrels.allJudgements:
         numRelevant = qrels.getNRelevant(topicId)
-        if numRelevant > 0:
-            details[topicId] = numRelevantFound / numRelevant
-            avg += numRelevantFound / numRelevant
-            nTopicsWRelevant += 1
-            # ignore queries without relevant docs is 1
-
+        if topicId in run.entries:
+            numRelevantFound = len([docId for docId, score, _ in entryList
+                                    if qrels.isRelevant(topicId, docId)])
+            if numRelevant > 0:
+                details[topicId] = numRelevantFound / numRelevant
+                avg += numRelevantFound / numRelevant
+                nTopicsWRelevant += 1
+                # ignore queries without relevant docs is 1
+        else:
+            details[topicId] = 0
+            avg += 0
+            if numRelevant > 0: nTopicsWRelevant += 1
     # numtopics = qrels.getNTopics()
     return avg / nTopicsWRelevant if not detailed else (avg / nTopicsWRelevant, details)
 
